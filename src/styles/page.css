@@ -1,5 +1,5 @@
 /* ── thèmes ─────────────────────────────────────────────────────────────
-   data-theme est posé avant le rendu par public/theme.js (préférence stockée, sinon système).
+   data-theme est posé avant le rendu par public/theme.js (choix stocké, sinon sombre par défaut).
    La route reste sombre (asphalte) et le jaune des boutons ne change pas. */
 :root,
 :root[data-theme='dark'] {
