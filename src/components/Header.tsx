@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react'
 import pixel from '../assets/kurkkumopo-pixel.png'
 import { GITHUB_ORG } from '../data'
 import { useTheme } from '../useTheme'
@@ -62,43 +62,155 @@ function Caret() {
   )
 }
 
-/** Sélecteur de langue : bouton pixel art + <select> natif invisible par-dessus (clavier, lecteurs d'écran, sélecteur natif mobile). */
+/** Sélecteur de langue pixel art : bouton + liste déroulante sur mesure (listbox accessible au clavier). */
 function LangSelect() {
   const { lang, setLang, t } = useI18n()
+  const [open, setOpen] = useState(false)
+  const [active, setActive] = useState(0)
+  const root = useRef<HTMLDivElement>(null)
+  const btn = useRef<HTMLButtonElement>(null)
+  const list = useRef<HTMLUListElement>(null)
+
+  const openList = () => {
+    setActive(LANGS.indexOf(lang))
+    setOpen(true)
+  }
+  const choose = (l: Lang) => {
+    setLang(l)
+    setOpen(false)
+    btn.current?.focus()
+  }
+
+  // focus sur la liste à l'ouverture, fermeture au clic en dehors
+  useEffect(() => {
+    if (!open) return
+    list.current?.focus()
+    const onDown = (e: PointerEvent) => {
+      if (!root.current?.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('pointerdown', onDown)
+    return () => document.removeEventListener('pointerdown', onDown)
+  }, [open])
+
+  const onListKey = (e: ReactKeyboardEvent) => {
+    if (e.key === 'ArrowDown') setActive((i) => (i + 1) % LANGS.length)
+    else if (e.key === 'ArrowUp') setActive((i) => (i - 1 + LANGS.length) % LANGS.length)
+    else if (e.key === 'Home') setActive(0)
+    else if (e.key === 'End') setActive(LANGS.length - 1)
+    else if (e.key === 'Enter' || e.key === ' ') choose(LANGS[active])
+    else if (e.key === 'Escape') {
+      setOpen(false)
+      btn.current?.focus()
+    } else if (e.key === 'Tab') setOpen(false)
+    else return
+    e.preventDefault()
+  }
+
   return (
-    <div
-      className="kh2 kh-lang"
-      style={{
-        position: 'relative',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 8,
-        minWidth: 64,
-        padding: '0 14px',
-        borderLeft: B,
-        color: 'var(--muted)',
-        fontFamily: "'Silkscreen',monospace",
-        fontSize: 13,
-        letterSpacing: '.08em',
-        transition: 'background .15s,color .15s',
-      }}
-    >
-      <span aria-hidden="true">{lang.toUpperCase()}</span>
-      <Caret />
-      <select
-        value={lang}
-        onChange={(e) => setLang(e.target.value as Lang)}
-        aria-label={t.nav.language}
-        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer', border: 0, fontSize: 16 }}
+    <div ref={root} style={{ position: 'relative', display: 'flex' }}>
+      <button
+        ref={btn}
+        type="button"
+        className="kh2 kh-lang-btn"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls="kh-lang-list"
+        aria-label={`${t.nav.language} : ${LANG_NAMES[lang]}`}
+        onClick={() => (open ? setOpen(false) : openList())}
+        onKeyDown={(e) => {
+          if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            e.preventDefault()
+            openList()
+          }
+        }}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 8,
+          minWidth: 64,
+          padding: '0 14px',
+          border: 0,
+          borderLeft: B,
+          background: open ? 'var(--surface)' : 'transparent',
+          color: open ? 'var(--text)' : 'var(--muted)',
+          fontFamily: "'Silkscreen',monospace",
+          fontSize: 13,
+          letterSpacing: '.08em',
+          cursor: 'pointer',
+          transition: 'background .15s,color .15s',
+        }}
       >
-        {LANGS.map((l) => (
-          <option key={l} value={l}>
-            {l.toUpperCase()} · {LANG_NAMES[l]}
-          </option>
-        ))}
-      </select>
+        {lang.toUpperCase()}
+        <span style={{ display: 'flex', transform: open ? 'rotate(180deg)' : undefined, transition: 'transform .15s' }}>
+          <Caret />
+        </span>
+      </button>
+      {open && (
+        <ul
+          ref={list}
+          id="kh-lang-list"
+          role="listbox"
+          tabIndex={-1}
+          aria-label={t.nav.language}
+          aria-activedescendant={`kh-lang-${LANGS[active]}`}
+          onKeyDown={onListKey}
+          style={{
+            position: 'absolute',
+            top: 'calc(100% + 1px)',
+            right: 0,
+            zIndex: 10,
+            minWidth: 176,
+            margin: 0,
+            padding: 4,
+            listStyle: 'none',
+            background: 'var(--surface)',
+            border: B,
+            boxShadow: '4px 4px 0 var(--accent)',
+            outline: 'none',
+          }}
+        >
+          {LANGS.map((l, i) => (
+            <li
+              key={l}
+              id={`kh-lang-${l}`}
+              role="option"
+              aria-selected={l === lang}
+              data-active={i === active}
+              className="kh-lang-opt"
+              onPointerEnter={() => setActive(i)}
+              onClick={() => choose(l)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 12,
+                padding: '10px 12px',
+                color: 'var(--muted)',
+                fontSize: 14,
+              }}
+            >
+              <span
+                className="kh-lang-code"
+                style={{ fontFamily: "'Silkscreen',monospace", fontSize: 12, letterSpacing: '.08em', width: 22 }}
+              >
+                {l.toUpperCase()}
+              </span>
+              <span style={{ flex: 1 }}>{LANG_NAMES[l]}</span>
+              {l === lang && <Check />}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
+  )
+}
+
+/** Coche en pixel art (grille 7×5). */
+function Check() {
+  return (
+    <svg width="14" height="10" viewBox="0 0 7 5" shapeRendering="crispEdges" fill="var(--accent-ink)" aria-hidden="true">
+      <path d="M6 0h1v1H6zM5 1h1v1H5zM0 2h1v1H0zM4 2h1v1H4zM1 3h1v1H1zM3 3h1v1H3zM2 4h1v1H2z" />
+    </svg>
   )
 }
 
