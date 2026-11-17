@@ -1,0 +1,307 @@
+html {
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  background: #070c18;
+}
+a {
+  color: #ece8dc;
+}
+a:hover {
+  color: #f5b81c;
+}
+header a,
+header nav a,
+#top a,
+section a[href^='#'],
+section a[href^='https'],
+header {
+  white-space: nowrap;
+}
+header {
+  overflow: hidden;
+}
+
+/* hovers */
+.kh1:hover {
+  background: #0b1224 !important;
+}
+.kh2:hover {
+  background: #0b1224 !important;
+  color: #ece8dc !important;
+}
+.kh3:hover {
+  background: #ffca3d !important;
+  color: #070c18 !important;
+}
+.kh4:hover {
+  border-color: #f5b81c !important;
+  color: #ece8dc !important;
+}
+.kh5:hover {
+  background: #ffca3d !important;
+  color: #070c18 !important;
+  transform: translateY(-2px) !important;
+}
+.kh6:hover {
+  border-color: #f5b81c !important;
+  color: #ece8dc !important;
+  transform: translateY(-2px) !important;
+}
+.kh7:hover {
+  box-shadow: inset 0 -3px 0 #f5b81c !important;
+}
+.kh8:hover {
+  color: #f5b81c !important;
+}
+@media (max-width: 760px) {
+  .kh-teamrow {
+    flex-wrap: wrap;
+  }
+  .kh-team {
+    flex: 1 1 calc(50% - 1px) !important;
+  }
+}
+
+/* projects */
+.kh-proj {
+  position: relative;
+  overflow: hidden;
+  flex: 1 1 0;
+  min-width: 0;
+  transition: flex-grow 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.kh-ban {
+  position: absolute;
+  inset: 0;
+  filter: grayscale(1) brightness(0.75);
+  transition:
+    filter 0.5s,
+    transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.kh-proj:hover {
+  flex-grow: 1.2;
+  color: #ece8dc !important;
+}
+.kh-proj:hover .kh-ban {
+  filter: none;
+  transform: scale(1.05);
+}
+.kh-proj h3,
+.kh-proj p,
+.kh-proj span {
+  transform-origin: left bottom;
+  transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.kh-proj:hover h3 {
+  transform: scale(1.18);
+}
+.kh-proj:hover p,
+.kh-proj:hover span {
+  transform: scale(1.06);
+}
+@media (max-width: 760px) {
+  .kh-projrow {
+    flex-direction: column;
+  }
+}
+
+/* team */
+.kh-team {
+  position: relative;
+  overflow: hidden;
+  flex: 1 1 0;
+  transition: flex-grow 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.kh-team::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--kh-bg, #f5b81c);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.kh-team::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: #070c18;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) 0.05s;
+}
+.kh-team > * {
+  position: relative;
+  z-index: 1;
+}
+.kh-team:hover {
+  flex-grow: 1.2;
+  color: var(--kh-ink, #070c18) !important;
+}
+.kh-team * {
+  transition: color 0.3s 0.1s;
+}
+.kh-team:hover * {
+  color: var(--kh-ink, #070c18) !important;
+}
+.kh-team:hover h3,
+.kh-team:hover h3 *,
+.kh-team:hover .kh-gh,
+.kh-team:hover .kh-gh *,
+.kh-team:hover .kh-lbl,
+.kh-team:hover .kh-lbl * {
+  color: var(--kh-acc, #8a1c12) !important;
+}
+.kh-team:hover .grayscale {
+  border-color: var(--kh-ink, #070c18) !important;
+}
+.kh-team:hover::before {
+  transform: scaleX(1);
+}
+.kh-team::after {
+  display: none;
+}
+.kh-team .grayscale {
+  transform-origin: left top;
+  transition:
+    filter 0.35s,
+    transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.kh-team:hover .grayscale {
+  filter: none !important;
+  transform: scale(1.18);
+}
+.kh-team h3,
+.kh-team > span {
+  transform-origin: left center;
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.kh-team:hover h3 {
+  transform: scale(1.15);
+}
+.kh-team:hover > span {
+  transform: scale(1.15);
+}
+
+/* animations */
+@keyframes kk-in {
+  from {
+    transform: translateX(-60vw);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes kk-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-7px) rotate(-1.2deg);
+  }
+}
+/* décale d'exactement une période du motif (48px) => boucle sans saut */
+@keyframes kk-road {
+  to {
+    transform: translate3d(-48px, 0, 0);
+  }
+}
+@keyframes kk-twinkle {
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+@keyframes kk-puff {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate(-90px, -26px) scale(0.4);
+    opacity: 0;
+  }
+}
+@keyframes kk-shadow {
+  0%,
+  100% {
+    transform: translateX(-50%) scaleX(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translateX(-50%) scaleX(0.9);
+    opacity: 0.35;
+  }
+}
+/* appliquées sur une piste pleine largeur : 100% = largeur de la route, en transform (composité GPU) */
+@keyframes kk-cross {
+  from {
+    transform: translate3d(-260px, 0, 0);
+  }
+  to {
+    transform: translate3d(calc(100% + 40px), 0, 0);
+  }
+}
+@keyframes kk-pass {
+  from {
+    transform: translate3d(calc(100% + 52px), 0, 0);
+  }
+  to {
+    transform: translate3d(-120px, 0, 0);
+  }
+}
+@keyframes kk-pop {
+  0% {
+    transform: translateY(6px) scale(0.6);
+    opacity: 0;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes kk-hop {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kk,
+  .kk * {
+    animation: none !important;
+  }
+}
+
+/* desktop : la page est un "canvas" de 1368px agrandi/réduit en JS (useFitZoom) pour que header + hero tiennent dans l'écran.
+   Dans ce mode les tailles en vw sont figées à leur valeur sur le canvas de 1368px. */
+.kh-fit .kh-h1 {
+  font-size: 82px !important;
+}
+.kh-fit .kh-h2 {
+  font-size: 60px !important;
+}
+.kh-fit .kh-h2-cta {
+  font-size: 68px !important;
+}
+.kh-fit .kh-proj h3 {
+  font-size: 33px !important;
+}
+.kh-fit #top {
+  min-height: var(--hero-min, 0px);
+}
+.kh-wrap.kh-fit {
+  max-width: none !important;
+}
