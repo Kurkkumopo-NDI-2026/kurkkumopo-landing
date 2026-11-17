@@ -36,9 +36,6 @@ const Scene = memo(function Scene() {
       />
       {STARS}
       <Road animated />
-      <div
-        style={{ position: 'absolute', left: '50%', bottom: 6, width: 170, height: 10, marginLeft: -85, background: 'rgba(0,0,0,.5)' }}
-      />
       <PassingItems />
       <div
         style={{
@@ -50,6 +47,8 @@ const Scene = memo(function Scene() {
           animation: 'kk-in 1.6s cubic-bezier(.2,.8,.2,1) both',
         }}
       >
+        {/* ombre dans le conteneur qui glisse (kk-in) : elle suit le kart à l'arrivée, sans sautiller avec lui */}
+        <div style={{ position: 'absolute', left: 23, bottom: -2, width: 170, height: 10, background: 'rgba(0,0,0,.5)' }} />
         <Kart width={216} puffs />
       </div>
     </div>
