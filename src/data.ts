@@ -71,8 +71,6 @@ export const PROJECTS: Project[] = ALL_PROJECTS.length
 
 const n = String(ALL_PROJECTS.length).padStart(2, '0')
 
-export const STATUS_LABEL = ALL_PROJECTS.length ? n + ' projets' : 'projets à venir'
-
 export const STATS = [
   { value: '04', label: 'membres' },
   { value: '01', label: 'nuit' },

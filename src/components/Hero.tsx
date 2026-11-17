@@ -1,5 +1,5 @@
 import { memo, useEffect, useState } from 'react'
-import { BUBBLES, GITHUB_ORG, STATUS_LABEL, WORDS } from '../data'
+import { BUBBLES, GITHUB_ORG, WORDS } from '../data'
 import { Kart, PassingItems, Road } from './pixel'
 import { silkLabel } from './styles'
 import { PrimaryBtn, SecondaryBtn } from './buttons'
@@ -108,16 +108,13 @@ export function Hero() {
             alignItems: 'center',
             gap: 12,
             border: '1px solid #1c2740',
-            padding: '8px 14px',
+            padding: '10px 18px',
             textDecoration: 'none',
-            fontSize: 14,
             background: '#0b1224',
             transition: 'border-color .15s',
           }}
         >
-          <span style={silkLabel(11, '.12em')}>NUIT DE L'INFO</span>
-          <span>2026 · {STATUS_LABEL}</span>
-          <span>→</span>
+          <span style={silkLabel(13, '.14em')}>NUIT DE L'INFO 2026</span>
         </a>
         <h1
           className="kh-h1"
