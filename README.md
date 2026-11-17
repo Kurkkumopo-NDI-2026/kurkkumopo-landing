@@ -27,7 +27,9 @@ Requires Node.js 22.12+.
 Add an entry to `ALL_PROJECTS` in [`src/data.ts`](src/data.ts):
 
 ```ts
-{ title, desc, stack, url, banner } // banner: an image imported from src/assets
+import banner from './assets/my-project.png'
+
+export const ALL_PROJECTS: ProjectInput[] = [{ title: 'My project', desc: 'What it does.', stack: 'React · Go', url: 'https://…', banner }]
 ```
 
 Project count, stats and cards update automatically.

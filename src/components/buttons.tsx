@@ -7,8 +7,8 @@ export function PrimaryBtn({ href, children }: { href: string; children: ReactNo
       className="kh5"
       style={{
         padding: '16px 24px',
-        background: '#f5b81c',
-        color: '#070c18',
+        background: 'var(--accent)',
+        color: 'var(--on-accent)',
         fontWeight: 600,
         fontSize: 15,
         textDecoration: 'none',
@@ -27,8 +27,8 @@ export function SecondaryBtn({ href, children }: { href: string; children: React
       className="kh6"
       style={{
         padding: '16px 24px',
-        background: '#0b1224',
-        border: '1px solid #1c2740',
+        background: 'var(--surface)',
+        border: '1px solid var(--line)',
         fontWeight: 600,
         fontSize: 15,
         textDecoration: 'none',

@@ -5,7 +5,7 @@ import { Kart, Road, Track } from './pixel'
 import { silkLabel } from './styles'
 import { PrimaryBtn, SecondaryBtn } from './buttons'
 
-const B = '1px solid #1c2740'
+const B = '1px solid var(--line)'
 
 function SectionHead({ kicker, title, sub, maxWidth }: { kicker: string; title: string; sub?: string; maxWidth?: string }) {
   return (
@@ -27,7 +27,9 @@ function SectionHead({ kicker, title, sub, maxWidth }: { kicker: string; title: 
       >
         {title}
       </h2>
-      {sub && <p style={{ margin: 0, fontSize: 17, lineHeight: 1.65, color: '#9aa3b5', maxWidth: '34em', textWrap: 'pretty' }}>{sub}</p>}
+      {sub && (
+        <p style={{ margin: 0, fontSize: 17, lineHeight: 1.65, color: 'var(--muted)', maxWidth: '34em', textWrap: 'pretty' }}>{sub}</p>
+      )}
     </div>
   )
 }
@@ -37,8 +39,8 @@ export function Stats() {
     <section id="stats" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', borderBottom: B }}>
       {STATS.map((s) => (
         <div key={s.label} style={{ padding: 32, borderRight: B, display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <span style={{ fontFamily: "'Silkscreen',monospace", fontSize: 44, lineHeight: 1, color: '#f5b81c' }}>{s.value}</span>
-          <span style={{ fontSize: 14, color: '#9aa3b5' }}>{s.label}</span>
+          <span style={{ fontFamily: "'Silkscreen',monospace", fontSize: 44, lineHeight: 1, color: 'var(--accent-ink)' }}>{s.value}</span>
+          <span style={{ fontSize: 14, color: 'var(--muted)' }}>{s.label}</span>
         </div>
       ))}
     </section>
@@ -68,9 +70,9 @@ export function Projects() {
               padding: 32,
               minHeight: 360,
               textDecoration: 'none',
-              color: '#ece8dc',
+              color: 'var(--text)',
               borderRight: B,
-              background: '#0b1224',
+              background: 'var(--surface)',
             }}
           >
             <div
@@ -84,7 +86,11 @@ export function Projects() {
               }}
             />
             <div
-              style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg,rgba(7,12,24,0) 30%,rgba(7,12,24,.92) 100%)' }}
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(180deg,rgba(var(--bg-rgb),0) 30%,rgba(var(--bg-rgb),.92) 100%)',
+              }}
             />
             <span style={{ position: 'relative', ...silkLabel(11) }}>PROJET {p.num}</span>
             <h3
@@ -99,8 +105,8 @@ export function Projects() {
             >
               {p.title}
             </h3>
-            <p style={{ position: 'relative', margin: 0, fontSize: 15, lineHeight: 1.6, color: '#c4cad6' }}>{p.desc}</p>
-            <span style={{ position: 'relative', fontSize: 14, color: '#f5b81c' }}>{p.stack}</span>
+            <p style={{ position: 'relative', margin: 0, fontSize: 15, lineHeight: 1.6, color: 'var(--muted-2)' }}>{p.desc}</p>
+            <span style={{ position: 'relative', fontSize: 14, color: 'var(--accent-ink)' }}>{p.stack}</span>
           </a>
         ))}
       </div>
@@ -126,7 +132,7 @@ export function Team() {
                 padding: '40px 32px',
                 textDecoration: 'none',
                 borderRight: B,
-                color: '#ece8dc',
+                color: 'var(--text)',
                 minWidth: 0,
                 '--kh-bg': m.bg,
                 '--kh-acc': m.acc,
@@ -140,7 +146,7 @@ export function Team() {
                 style={{
                   width: 72,
                   height: 72,
-                  backgroundColor: '#0b1224',
+                  backgroundColor: 'var(--surface)',
                   backgroundImage: `url('${m.avatar}')`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
@@ -152,8 +158,8 @@ export function Team() {
               </span>
             </div>
             <h3 style={{ fontSize: 22, fontWeight: 500, margin: 0 }}>{m.name}</h3>
-            <p style={{ margin: 0, fontSize: 16, lineHeight: 1.65, color: '#9aa3b5', flex: 1, textWrap: 'pretty' }}>{m.role}</p>
-            <span className="kh-gh" style={{ fontSize: 14, color: '#f5b81c' }}>
+            <p style={{ margin: 0, fontSize: 16, lineHeight: 1.65, color: 'var(--muted)', flex: 1, textWrap: 'pretty' }}>{m.role}</p>
+            <span className="kh-gh" style={{ fontSize: 14, color: 'var(--accent-ink)' }}>
               {m.handle} →
             </span>
           </a>
@@ -204,7 +210,7 @@ export function Cta() {
           textWrap: 'balance',
         }}
       >
-        Les commits arrivent. <span style={{ color: '#f5b81c' }}>Le café aussi.</span>
+        Les commits arrivent. <span style={{ color: 'var(--accent-ink)' }}>Le café aussi.</span>
       </h2>
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
         <PrimaryBtn href={GITHUB_ORG}>Suivre sur GitHub →</PrimaryBtn>
@@ -216,14 +222,14 @@ export function Cta() {
 }
 
 const col: CSSProperties = { padding: 32, display: 'flex', flexDirection: 'column', gap: 10, fontSize: 14 }
-const fLink: CSSProperties = { textDecoration: 'none', color: '#9aa3b5', transition: 'color .15s' }
+const fLink: CSSProperties = { textDecoration: 'none', color: 'var(--muted)', transition: 'color .15s' }
 
 export function Footer() {
   return (
     <footer style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))' }}>
       <div style={{ padding: 32, display: 'flex', flexDirection: 'column', gap: 12, borderRight: B }}>
         <strong style={{ fontSize: 20, fontWeight: 600 }}>kurkkumopo.info</strong>
-        <span style={{ fontSize: 14, lineHeight: 1.6, color: '#9aa3b5' }}>Hub de l'équipe Kurkkumopo, Nuit de l'Info 2026.</span>
+        <span style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--muted)' }}>Hub de l'équipe Kurkkumopo, Nuit de l'Info 2026.</span>
       </div>
       <div style={{ ...col, borderRight: B }}>
         <span style={silkLabel(11)}>HUB</span>
@@ -242,7 +248,7 @@ export function Footer() {
           </a>
         ))}
       </div>
-      <div style={{ ...col, color: '#9aa3b5' }}>
+      <div style={{ ...col, color: 'var(--muted)' }}>
         <span style={silkLabel(11)}>NUIT DE L'INFO</span>
         <span>© 2026 Kurkkumopo</span>
         <span>Fait avec du café · zzZ</span>

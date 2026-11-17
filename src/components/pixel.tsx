@@ -17,8 +17,8 @@ export function Road({ animated }: { animated: boolean }) {
           right: 0,
           bottom: 0,
           height: 68,
-          background: 'linear-gradient(#0e1830,#0b1224)',
-          borderTop: '2px solid #f5b81c',
+          background: 'linear-gradient(var(--road-top),var(--road-bottom))',
+          borderTop: '2px solid var(--accent)',
         }}
       />
       <div
@@ -123,7 +123,9 @@ export function PassingItems() {
       {ITEMS.map(([k, label], i) => (
         <Track key={'it' + i} bottom={40} animation={`kk-pass ${dur}s ${delay(i)}s linear infinite`}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-            <span style={{ fontFamily: silk, fontSize: 10, letterSpacing: '.1em', color: '#9aa3b5', whiteSpace: 'nowrap' }}>{label}</span>
+            <span style={{ fontFamily: silk, fontSize: 10, letterSpacing: '.1em', color: 'var(--muted)', whiteSpace: 'nowrap' }}>
+              {label}
+            </span>
             <Sprite rows={S[k]} px={4} />
           </div>
         </Track>

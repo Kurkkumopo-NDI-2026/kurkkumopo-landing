@@ -1,15 +1,60 @@
+/* ── thèmes ─────────────────────────────────────────────────────────────
+   data-theme est posé avant le rendu par public/theme.js (préférence stockée, sinon système).
+   La route reste sombre (asphalte) et le jaune des boutons ne change pas. */
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #070c18;
+  --bg-rgb: 7, 12, 24;
+  --surface: #0b1224;
+  --line: #1c2740;
+  --text: #ece8dc;
+  --muted: #9aa3b5;
+  --muted-2: #c4cad6;
+  --accent: #f5b81c;
+  --accent-hover: #ffca3d;
+  --accent-ink: #f5b81c; /* accent utilisé comme couleur de texte */
+  --on-accent: #070c18; /* texte sur fond jaune */
+  --road-top: #0e1830;
+  --road-bottom: #0b1224;
+  --star: #ece8dc;
+  --star-accent: #f5b81c;
+  --bubble-bg: #ece8dc;
+  --bubble-ink: #070c18;
+}
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #f7f4ec;
+  --bg-rgb: 247, 244, 236;
+  --surface: #eee8da;
+  --line: #dbd3c1;
+  --text: #141a29;
+  --muted: #586074;
+  --muted-2: #3b4354;
+  --accent: #f5b81c;
+  --accent-hover: #ffca3d;
+  --accent-ink: #9c6900;
+  --on-accent: #070c18;
+  --road-top: #1b2645;
+  --road-bottom: #121a33;
+  --star: #cfc6ae;
+  --star-accent: #e2a300;
+  --bubble-bg: #141a29;
+  --bubble-ink: #f7f4ec;
+}
+
 html {
   scroll-behavior: smooth;
 }
 body {
   margin: 0;
-  background: #070c18;
+  background: var(--bg);
 }
 a {
-  color: #ece8dc;
+  color: var(--text);
 }
 a:hover {
-  color: #f5b81c;
+  color: var(--accent-ink);
 }
 header a,
 header nav a,
@@ -25,35 +70,35 @@ header {
 
 /* hovers */
 .kh1:hover {
-  background: #0b1224 !important;
+  background: var(--surface) !important;
 }
 .kh2:hover {
-  background: #0b1224 !important;
-  color: #ece8dc !important;
+  background: var(--surface) !important;
+  color: var(--text) !important;
 }
 .kh3:hover {
-  background: #ffca3d !important;
-  color: #070c18 !important;
+  background: var(--accent-hover) !important;
+  color: var(--on-accent) !important;
 }
 .kh4:hover {
-  border-color: #f5b81c !important;
-  color: #ece8dc !important;
+  border-color: var(--accent) !important;
+  color: var(--text) !important;
 }
 .kh5:hover {
-  background: #ffca3d !important;
-  color: #070c18 !important;
+  background: var(--accent-hover) !important;
+  color: var(--on-accent) !important;
   transform: translateY(-2px) !important;
 }
 .kh6:hover {
-  border-color: #f5b81c !important;
-  color: #ece8dc !important;
+  border-color: var(--accent) !important;
+  color: var(--text) !important;
   transform: translateY(-2px) !important;
 }
 .kh7:hover {
-  box-shadow: inset 0 -3px 0 #f5b81c !important;
+  box-shadow: inset 0 -3px 0 var(--accent) !important;
 }
 .kh8:hover {
-  color: #f5b81c !important;
+  color: var(--accent-ink) !important;
 }
 @media (max-width: 760px) {
   .kh-teamrow {
@@ -82,7 +127,7 @@ header {
 }
 .kh-proj:hover {
   flex-grow: 1.2;
-  color: #ece8dc !important;
+  color: var(--text) !important;
 }
 .kh-proj:hover .kh-ban {
   filter: none;
@@ -130,7 +175,7 @@ header {
   right: 0;
   bottom: 0;
   height: 3px;
-  background: #070c18;
+  background: var(--bg);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) 0.05s;
@@ -348,13 +393,13 @@ section[id] {
   }
   /* grilles empilées : séparateurs horizontaux */
   .kh-team {
-    border-bottom: 1px solid #1c2740;
+    border-bottom: 1px solid var(--line);
   }
   #stats {
     grid-template-columns: repeat(2, 1fr) !important;
   }
   #stats > div {
-    border-bottom: 1px solid #1c2740;
+    border-bottom: 1px solid var(--line);
     padding: 24px 20px !important;
   }
   #stats > div:nth-child(2n) {
@@ -368,7 +413,7 @@ section[id] {
   }
   footer > div {
     border-right: 0 !important;
-    border-bottom: 1px solid #1c2740;
+    border-bottom: 1px solid var(--line);
     padding: 24px 20px !important;
   }
   footer > div:last-child {

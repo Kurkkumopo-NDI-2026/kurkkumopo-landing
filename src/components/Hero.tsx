@@ -17,7 +17,7 @@ const STARS = Array.from({ length: 22 }, (_, i) => {
         top: y + '%',
         width: sz,
         height: sz,
-        background: i % 4 ? '#ece8dc' : '#f5b81c',
+        background: i % 4 ? 'var(--star)' : 'var(--star-accent)',
         animation: 'kk-twinkle ' + (2.4 + (i % 5) * 0.6) + 's ' + (i % 7) * 0.4 + 's infinite steps(3)',
       }}
     />
@@ -64,11 +64,11 @@ function Bubble({ w }: { w: number }) {
           fontFamily: "'Silkscreen',monospace",
           fontSize: 12,
           letterSpacing: '.08em',
-          background: '#ece8dc',
-          color: '#070c18',
+          background: 'var(--bubble-bg)',
+          color: 'var(--bubble-ink)',
           padding: '6px 10px',
           whiteSpace: 'nowrap',
-          boxShadow: '4px 4px 0 #f5b81c',
+          boxShadow: '4px 4px 0 var(--accent)',
           animation: 'kk-pop .3s steps(3) both ' + (w ? '0s' : '1.6s'),
         }}
       >
@@ -91,7 +91,7 @@ export function Hero() {
       style={{
         position: 'relative',
         overflow: 'hidden',
-        borderBottom: '1px solid #1c2740',
+        borderBottom: '1px solid var(--line)',
         textAlign: 'center',
         padding: '48px 32px 0',
         display: 'flex',
@@ -107,10 +107,10 @@ export function Hero() {
             display: 'inline-flex',
             alignItems: 'center',
             gap: 12,
-            border: '1px solid #1c2740',
+            border: '1px solid var(--line)',
             padding: '10px 18px',
             textDecoration: 'none',
-            background: '#0b1224',
+            background: 'var(--surface)',
             transition: 'border-color .15s',
           }}
         >
@@ -134,16 +134,16 @@ export function Hero() {
             height="1.1em"
             viewBox="0 0 12 12"
             shapeRendering="crispEdges"
-            style={{ verticalAlign: '-.1em', margin: '0 .15em', fill: '#f5b81c' }}
+            style={{ verticalAlign: '-.1em', margin: '0 .15em', fill: 'var(--accent-ink)' }}
           >
             <path d="M3 0h1v2H3zM6 0h1v2H6zM2 3h8v1H2zM2 4h1v5H2zM9 4h1v5H9zM10 4h2v1h-2zM11 5h1v3h-1zM10 7h1v1h-1zM3 9h6v1H3zM2 10h8v1H2z" />
           </svg>
           <br />
-          <span style={{ color: '#f5b81c' }}>{WORDS[w]}.</span>
+          <span style={{ color: 'var(--accent-ink)' }}>{WORDS[w]}.</span>
         </h1>
         <p
           className="kh-lead"
-          style={{ fontSize: 19, lineHeight: 1.65, color: '#9aa3b5', maxWidth: '34em', margin: '20px auto 0', textWrap: 'pretty' }}
+          style={{ fontSize: 19, lineHeight: 1.65, color: 'var(--muted)', maxWidth: '34em', margin: '20px auto 0', textWrap: 'pretty' }}
         >
           Le hub de l'équipe Kurkkumopo : tous les projets construits pendant la Nuit de l'Info 2026, au même endroit.
         </p>

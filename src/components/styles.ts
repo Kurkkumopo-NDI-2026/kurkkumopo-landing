@@ -6,5 +6,5 @@ export const silkLabel = (size: number, spacing = '.14em'): CSSProperties => ({
   fontFamily: silk,
   fontSize: size,
   letterSpacing: spacing,
-  color: '#f5b81c',
+  color: 'var(--accent-ink)',
 })
