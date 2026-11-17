@@ -305,3 +305,93 @@ header {
 .kh-wrap.kh-fit {
   max-width: none !important;
 }
+
+/* ── mobile ─────────────────────────────────────────────────────────────── */
+/* ancres : ne pas cacher le haut des sections sous le header sticky */
+section[id] {
+  scroll-margin-top: 57px;
+}
+.kh-mob {
+  display: none;
+}
+@media (max-width: 760px) {
+  .kh-desk {
+    display: none !important;
+  }
+  .kh-mob {
+    display: flex !important;
+  }
+}
+@media (max-width: 480px) {
+  .kh-team {
+    flex: 1 1 100% !important;
+  }
+}
+@media (max-width: 760px) {
+  /* hero plus compact : le kart reste visible dès l'arrivée */
+  #top {
+    padding: 28px 20px 0 !important;
+  }
+  #top h1 {
+    margin-top: 16px !important;
+  }
+  #top .kh-lead {
+    margin-top: 14px !important;
+    font-size: 17px !important;
+  }
+  #top .kh-ctas {
+    margin-top: 20px !important;
+  }
+  #top .kh-scene {
+    height: 250px !important;
+    margin: 0 -20px !important;
+  }
+  /* grilles empilées : séparateurs horizontaux */
+  .kh-team {
+    border-bottom: 1px solid #1c2740;
+  }
+  #stats {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  #stats > div {
+    border-bottom: 1px solid #1c2740;
+    padding: 24px 20px !important;
+  }
+  #stats > div:nth-child(2n) {
+    border-right: 0 !important;
+  }
+  #stats > div:nth-last-child(-n + 2) {
+    border-bottom: 0;
+  }
+  footer {
+    grid-template-columns: 1fr !important;
+  }
+  footer > div {
+    border-right: 0 !important;
+    border-bottom: 1px solid #1c2740;
+    padding: 24px 20px !important;
+  }
+  footer > div:last-child {
+    border-bottom: 0;
+  }
+}
+@media (max-width: 480px) {
+  .kh-team {
+    padding: 32px 20px !important;
+  }
+}
+@media (max-width: 420px) {
+  /* les deux boutons du hero tiennent sur une ligne */
+  .kh5,
+  .kh6 {
+    padding: 14px 16px !important;
+    font-size: 14px !important;
+  }
+}
+/* écrans tactiles : pas de survol => couleurs affichées par défaut */
+@media (hover: none) {
+  .kh-ban,
+  .kh-team .grayscale {
+    filter: none !important;
+  }
+}

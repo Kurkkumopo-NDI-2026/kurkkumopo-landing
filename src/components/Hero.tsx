@@ -144,15 +144,18 @@ export function Hero() {
           <br />
           <span style={{ color: '#f5b81c' }}>{WORDS[w]}.</span>
         </h1>
-        <p style={{ fontSize: 19, lineHeight: 1.65, color: '#9aa3b5', maxWidth: '34em', margin: '20px auto 0', textWrap: 'pretty' }}>
+        <p
+          className="kh-lead"
+          style={{ fontSize: 19, lineHeight: 1.65, color: '#9aa3b5', maxWidth: '34em', margin: '20px auto 0', textWrap: 'pretty' }}
+        >
           Le hub de l'équipe Kurkkumopo : tous les projets construits pendant la Nuit de l'Info 2026, au même endroit.
         </p>
-        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginTop: 28 }}>
+        <div className="kh-ctas" style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginTop: 28 }}>
           <PrimaryBtn href="#projets">Voir les projets →</PrimaryBtn>
           <SecondaryBtn href={GITHUB_ORG}>Voir sur GitHub</SecondaryBtn>
         </div>
       </div>
-      <div style={{ position: 'relative', height: 270, margin: '8px -32px 0', flex: 'none' }}>
+      <div className="kh-scene" style={{ position: 'relative', height: 270, margin: '8px -32px 0', flex: 'none' }}>
         <Scene />
         <Bubble w={w} />
       </div>
