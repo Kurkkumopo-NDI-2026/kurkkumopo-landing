@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import pixel from '../assets/kurkkumopo-pixel.png'
 import { GITHUB_ORG } from '../data'
 import { useTheme } from '../useTheme'
+import { useI18n } from '../i18n/context'
+import { LANGS, LANG_NAMES, type Lang } from '../i18n/messages'
 
 const B = '1px solid var(--line)'
 const navLink = {
@@ -15,10 +17,10 @@ const navLink = {
 } as const
 
 const LINKS = [
-  { href: '#projets', label: 'Projets' },
-  { href: '#equipe', label: 'Équipe' },
-  { href: '#stats', label: 'La nuit' },
-]
+  { href: '#projets', key: 'projects' },
+  { href: '#equipe', key: 'team' },
+  { href: '#stats', key: 'night' },
+] as const
 
 const ctaStyle = {
   display: 'flex',
@@ -51,6 +53,55 @@ function PixelIcon({ rows }: { rows: string[] }) {
   )
 }
 
+/** Flèche ▾ en pixel art (grille 5×3). */
+function Caret() {
+  return (
+    <svg width="10" height="6" viewBox="0 0 5 3" shapeRendering="crispEdges" fill="currentColor" aria-hidden="true">
+      <path d="M0 0h5v1H0zM1 1h3v1H1zM2 2h1v1H2z" />
+    </svg>
+  )
+}
+
+/** Sélecteur de langue : bouton pixel art + <select> natif invisible par-dessus (clavier, lecteurs d'écran, sélecteur natif mobile). */
+function LangSelect() {
+  const { lang, setLang, t } = useI18n()
+  return (
+    <div
+      className="kh2 kh-lang"
+      style={{
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 8,
+        minWidth: 64,
+        padding: '0 14px',
+        borderLeft: B,
+        color: 'var(--muted)',
+        fontFamily: "'Silkscreen',monospace",
+        fontSize: 13,
+        letterSpacing: '.08em',
+        transition: 'background .15s,color .15s',
+      }}
+    >
+      <span aria-hidden="true">{lang.toUpperCase()}</span>
+      <Caret />
+      <select
+        value={lang}
+        onChange={(e) => setLang(e.target.value as Lang)}
+        aria-label={t.nav.language}
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer', border: 0, fontSize: 16 }}
+      >
+        {LANGS.map((l) => (
+          <option key={l} value={l}>
+            {l.toUpperCase()} · {LANG_NAMES[l]}
+          </option>
+        ))}
+      </select>
+    </div>
+  )
+}
+
 /** Icône burger / croix en pixel art (grille 8×8). */
 function MenuIcon({ open }: { open: boolean }) {
   return (
@@ -67,6 +118,7 @@ function MenuIcon({ open }: { open: boolean }) {
 export function Header() {
   const [open, setOpen] = useState(false)
   const { theme, toggle } = useTheme()
+  const { t } = useI18n()
 
   useEffect(() => {
     if (!open) return
@@ -99,7 +151,7 @@ export function Header() {
       <div style={{ display: 'flex', alignItems: 'stretch', flexWrap: 'wrap' }}>
         <a
           href="#top"
-          className="kh1"
+          className="kh1 kh-logo"
           onClick={close}
           style={{
             display: 'flex',
@@ -115,22 +167,23 @@ export function Header() {
           }}
         >
           <img src={pixel} alt="" style={{ width: 36, height: 36, imageRendering: 'pixelated' }} />
-          Kurkkumopo
+          <span className="kh-logo-txt">Kurkkumopo</span>
         </a>
         {LINKS.map((l) => (
           <a key={l.href} href={l.href} className="kh2 kh-desk" style={{ ...navLink, borderRight: B }}>
-            {l.label}
+            {t.nav[l.key]}
           </a>
         ))}
       </div>
 
       <div style={{ display: 'flex', alignItems: 'stretch' }}>
+        <LangSelect />
         <button
           type="button"
           className="kh2"
           onClick={toggle}
-          aria-label={theme === 'dark' ? 'Passer en mode clair' : 'Passer en mode sombre'}
-          title={theme === 'dark' ? 'Mode clair' : 'Mode sombre'}
+          aria-label={theme === 'dark' ? t.nav.toLight : t.nav.toDark}
+          title={theme === 'dark' ? t.nav.toLight : t.nav.toDark}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -162,7 +215,7 @@ export function Header() {
           className="kh2 kh-mob"
           aria-expanded={open}
           aria-controls="kh-menu"
-          aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'}
+          aria-label={open ? t.nav.closeMenu : t.nav.openMenu}
           onClick={() => setOpen((o) => !o)}
           style={{
             display: 'none',
@@ -192,7 +245,7 @@ export function Header() {
               className="kh2"
               style={{ ...navLink, height: 52, padding: '0 20px', fontSize: 16, borderBottom: B }}
             >
-              {l.label}
+              {t.nav[l.key]}
             </a>
           ))}
           <a

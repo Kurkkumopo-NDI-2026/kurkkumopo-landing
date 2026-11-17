@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react'
 import vert2 from '../assets/kurkkumopo-pixel-vert2.png'
 import { GITHUB_ORG, PROJECTS, STATS, TEAM } from '../data'
+import { useI18n } from '../i18n/context'
 import { Kart, Road, Track } from './pixel'
 import { silkLabel } from './styles'
 import { PrimaryBtn, SecondaryBtn } from './buttons'
@@ -35,12 +36,13 @@ function SectionHead({ kicker, title, sub, maxWidth }: { kicker: string; title: 
 }
 
 export function Stats() {
+  const { t } = useI18n()
   return (
     <section id="stats" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', borderBottom: B }}>
-      {STATS.map((s) => (
-        <div key={s.label} style={{ padding: 32, borderRight: B, display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <span style={{ fontFamily: "'Silkscreen',monospace", fontSize: 44, lineHeight: 1, color: 'var(--accent-ink)' }}>{s.value}</span>
-          <span style={{ fontSize: 14, color: 'var(--muted)' }}>{s.label}</span>
+      {STATS.map((value, i) => (
+        <div key={i} style={{ padding: 32, borderRight: B, display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <span style={{ fontFamily: "'Silkscreen',monospace", fontSize: 44, lineHeight: 1, color: 'var(--accent-ink)' }}>{value}</span>
+          <span style={{ fontSize: 14, color: 'var(--muted)' }}>{t.stats[i]}</span>
         </div>
       ))}
     </section>
@@ -48,14 +50,10 @@ export function Stats() {
 }
 
 export function Projects() {
+  const { t } = useI18n()
   return (
     <section id="projets" style={{ borderBottom: B }}>
-      <SectionHead
-        kicker="PROJETS"
-        title="Ce qu'on construit pendant la nuit."
-        sub="Codés entre le coucher et le lever du soleil. Survole un projet pour découvrir sa stack, ouvre-le pour le dépôt et la démo."
-        maxWidth="14em"
-      />
+      <SectionHead kicker={t.projects.kicker} title={t.projects.title} sub={t.projects.sub} maxWidth="14em" />
       <div className="kh-projrow" style={{ display: 'flex', borderTop: B, minHeight: 360 }}>
         {PROJECTS.map((p) => (
           <a
@@ -92,7 +90,9 @@ export function Projects() {
                 background: 'linear-gradient(180deg,rgba(var(--bg-rgb),0) 30%,rgba(var(--bg-rgb),.92) 100%)',
               }}
             />
-            <span style={{ position: 'relative', ...silkLabel(11) }}>PROJET {p.num}</span>
+            <span style={{ position: 'relative', ...silkLabel(11) }}>
+              {t.projects.label} {p.num}
+            </span>
             <h3
               style={{
                 position: 'relative',
@@ -103,9 +103,11 @@ export function Projects() {
                 margin: 0,
               }}
             >
-              {p.title}
+              {p.placeholder ? t.projects.soonTitle : p.title}
             </h3>
-            <p style={{ position: 'relative', margin: 0, fontSize: 15, lineHeight: 1.6, color: 'var(--muted-2)' }}>{p.desc}</p>
+            <p style={{ position: 'relative', margin: 0, fontSize: 15, lineHeight: 1.6, color: 'var(--muted-2)' }}>
+              {p.placeholder ? t.projects.soonDesc : p.desc}
+            </p>
             <span style={{ position: 'relative', fontSize: 14, color: 'var(--accent-ink)' }}>{p.stack}</span>
           </a>
         ))}
@@ -115,11 +117,12 @@ export function Projects() {
 }
 
 export function Team() {
+  const { t } = useI18n()
   return (
     <section id="equipe" style={{ borderBottom: B }}>
-      <SectionHead kicker="ÉQUIPE" title="Les quatre derrière les commits." />
+      <SectionHead kicker={t.team.kicker} title={t.team.title} />
       <div className="kh-teamrow" style={{ display: 'flex', borderTop: B }}>
-        {TEAM.map((m) => (
+        {TEAM.map((m, i) => (
           <a
             key={m.handle}
             href={m.url}
@@ -154,11 +157,13 @@ export function Team() {
                 }}
               />
               <span className="kh-lbl" style={silkLabel(11)}>
-                AGENT {m.num}
+                {t.team.agent} {m.num}
               </span>
             </div>
             <h3 style={{ fontSize: 22, fontWeight: 500, margin: 0 }}>{m.name}</h3>
-            <p style={{ margin: 0, fontSize: 16, lineHeight: 1.65, color: 'var(--muted)', flex: 1, textWrap: 'pretty' }}>{m.role}</p>
+            <p style={{ margin: 0, fontSize: 16, lineHeight: 1.65, color: 'var(--muted)', flex: 1, textWrap: 'pretty' }}>
+              {t.team.roles[i]}
+            </p>
             <span className="kh-gh" style={{ fontSize: 14, color: 'var(--accent-ink)' }}>
               {m.handle} →
             </span>
@@ -184,6 +189,7 @@ function Peek() {
 }
 
 export function Cta() {
+  const { t } = useI18n()
   return (
     <section
       style={{
@@ -210,11 +216,11 @@ export function Cta() {
           textWrap: 'balance',
         }}
       >
-        Les commits arrivent. <span style={{ color: 'var(--accent-ink)' }}>Le café aussi.</span>
+        {t.cta.title} <span style={{ color: 'var(--accent-ink)' }}>{t.cta.accent}</span>
       </h2>
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
-        <PrimaryBtn href={GITHUB_ORG}>Suivre sur GitHub →</PrimaryBtn>
-        <SecondaryBtn href="#projets">Les projets</SecondaryBtn>
+        <PrimaryBtn href={GITHUB_ORG}>{t.cta.github}</PrimaryBtn>
+        <SecondaryBtn href="#projets">{t.cta.projects}</SecondaryBtn>
       </div>
       <Peek />
     </section>
@@ -225,19 +231,20 @@ const col: CSSProperties = { padding: 32, display: 'flex', flexDirection: 'colum
 const fLink: CSSProperties = { textDecoration: 'none', color: 'var(--muted)', transition: 'color .15s' }
 
 export function Footer() {
+  const { t } = useI18n()
   return (
     <footer style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))' }}>
       <div style={{ padding: 32, display: 'flex', flexDirection: 'column', gap: 12, borderRight: B }}>
         <strong style={{ fontSize: 20, fontWeight: 600 }}>kurkkumopo.info</strong>
-        <span style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--muted)' }}>Hub de l'équipe Kurkkumopo, Nuit de l'Info 2026.</span>
+        <span style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--muted)' }}>{t.footer.tagline}</span>
       </div>
       <div style={{ ...col, borderRight: B }}>
         <span style={silkLabel(11)}>HUB</span>
         <a href="#projets" className="kh8" style={fLink}>
-          Projets
+          {t.nav.projects}
         </a>
         <a href="#equipe" className="kh8" style={fLink}>
-          Équipe
+          {t.nav.team}
         </a>
       </div>
       <div style={{ ...col, borderRight: B }}>
@@ -249,9 +256,9 @@ export function Footer() {
         ))}
       </div>
       <div style={{ ...col, color: 'var(--muted)' }}>
-        <span style={silkLabel(11)}>NUIT DE L'INFO</span>
+        <span style={silkLabel(11)}>{t.footer.event}</span>
         <span>© 2026 Kurkkumopo</span>
-        <span>Fait avec du café · zzZ</span>
+        <span>{t.footer.made}</span>
       </div>
     </footer>
   )

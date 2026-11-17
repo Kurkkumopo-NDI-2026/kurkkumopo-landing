@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 import pixel from '../assets/kurkkumopo-pixel.png'
+import { useI18n } from '../i18n/context'
 
 const silk = "'Silkscreen',monospace"
 
@@ -39,6 +40,7 @@ export function Road({ animated }: { animated: boolean }) {
 }
 
 export function Kart({ width, puffs, src }: { width: number; puffs?: boolean; src?: string }) {
+  const { t } = useI18n()
   const px = width / 72
   return (
     <div style={{ position: 'relative', width, animation: 'kk-hop .36s steps(2) infinite' }}>
@@ -57,11 +59,7 @@ export function Kart({ width, puffs, src }: { width: number; puffs?: boolean; sr
             }}
           />
         ))}
-      <img
-        src={src ?? pixel}
-        alt="Kurkkumopo, mascotte de l'équipe"
-        style={{ width: '100%', display: 'block', imageRendering: 'pixelated' }}
-      />
+      <img src={src ?? pixel} alt={t.hero.kartAlt} style={{ width: '100%', display: 'block', imageRendering: 'pixelated' }} />
     </div>
   )
 }
@@ -89,18 +87,14 @@ const S: Record<string, string[]> = {
   sign: ['YYYYYYYY', 'YDDYYDDY', 'YYYYYYYY', '...GG...', '...GG...', '...GG...', '...GG...', '..GGGG..'],
 }
 
-const ITEMS: [string, string][] = [
-  ['cup', 'CAFÉ'],
-  ['bug', 'BUG #42'],
-  ['cone', 'TRAVAUX'],
-  ['sign', 'DEPLOY'],
-  ['cup', 'CAFÉ x2'],
-]
+// sprites des objets de la route (libellés dans t.road, même ordre)
+const ITEMS = ['cup', 'bug', 'cone', 'sign', 'cup']
 
 // kk-pass : de translateX(100% + 52px) à translateX(-120px) => distance = largeur de la route + 172px
 const PASS_EXTRA = 52 + 120
 
 export function PassingItems() {
+  const { t } = useI18n()
   const ref = useRef<HTMLDivElement>(null)
   const [roadW, setRoadW] = useState(1368)
 
@@ -120,11 +114,11 @@ export function PassingItems() {
   return (
     <>
       <div ref={ref} style={{ position: 'absolute', left: 0, right: 0, height: 0 }} />
-      {ITEMS.map(([k, label], i) => (
+      {ITEMS.map((k, i) => (
         <Track key={'it' + i} bottom={40} animation={`kk-pass ${dur}s ${delay(i)}s linear infinite`}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
             <span style={{ fontFamily: silk, fontSize: 10, letterSpacing: '.1em', color: 'var(--muted)', whiteSpace: 'nowrap' }}>
-              {label}
+              {t.road[i]}
             </span>
             <Sprite rows={S[k]} px={4} />
           </div>

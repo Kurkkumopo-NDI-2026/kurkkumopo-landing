@@ -440,3 +440,21 @@ section[id] {
     filter: none !important;
   }
 }
+
+/* sélecteur de langue : focus clavier visible sur le bouton pixel art */
+.kh-lang:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+/* petits écrans : logo + langue + thème + menu tiennent sur une ligne */
+@media (max-width: 420px) {
+  .kh-logo {
+    padding: 0 14px !important;
+    gap: 8px !important;
+  }
+}
+@media (max-width: 340px) {
+  .kh-logo-txt {
+    display: none;
+  }
+}

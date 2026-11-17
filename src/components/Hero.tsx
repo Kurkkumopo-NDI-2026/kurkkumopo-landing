@@ -1,5 +1,6 @@
 import { memo, useEffect, useState } from 'react'
-import { BUBBLES, GITHUB_ORG, WORDS } from '../data'
+import { GITHUB_ORG } from '../data'
+import { useI18n } from '../i18n/context'
 import { Kart, PassingItems, Road } from './pixel'
 import { silkLabel } from './styles'
 import { PrimaryBtn, SecondaryBtn } from './buttons'
@@ -56,6 +57,7 @@ const Scene = memo(function Scene() {
 })
 
 function Bubble({ w }: { w: number }) {
+  const { t } = useI18n()
   return (
     <div className="kk" style={{ position: 'absolute', left: '50%', bottom: 212, marginLeft: 50, zIndex: 3, pointerEvents: 'none' }}>
       <div
@@ -72,18 +74,19 @@ function Bubble({ w }: { w: number }) {
           animation: 'kk-pop .3s steps(3) both ' + (w ? '0s' : '1.6s'),
         }}
       >
-        {BUBBLES[w % 5]}
+        {t.hero.bubbles[w % t.hero.bubbles.length]}
       </div>
     </div>
   )
 }
 
 export function Hero() {
+  const { t } = useI18n()
   const [w, setW] = useState(0)
   useEffect(() => {
-    const t = setInterval(() => setW((s) => (s + 1) % WORDS.length), 2200)
-    return () => clearInterval(t)
-  }, [])
+    const id = setInterval(() => setW((s) => (s + 1) % t.hero.words.length), 2200)
+    return () => clearInterval(id)
+  }, [t.hero.words.length])
 
   return (
     <section
@@ -114,7 +117,7 @@ export function Hero() {
             transition: 'border-color .15s',
           }}
         >
-          <span style={silkLabel(13, '.14em')}>NUIT DE L'INFO 2026</span>
+          <span style={silkLabel(13, '.14em')}>{t.hero.badge}</span>
         </a>
         <h1
           className="kh-h1"
@@ -128,7 +131,7 @@ export function Hero() {
             textWrap: 'balance',
           }}
         >
-          Une nuit, quatre devs et
+          {t.hero.title}
           <svg
             width="1.1em"
             height="1.1em"
@@ -139,17 +142,17 @@ export function Hero() {
             <path d="M3 0h1v2H3zM6 0h1v2H6zM2 3h8v1H2zM2 4h1v5H2zM9 4h1v5H9zM10 4h2v1h-2zM11 5h1v3h-1zM10 7h1v1h-1zM3 9h6v1H3zM2 10h8v1H2z" />
           </svg>
           <br />
-          <span style={{ color: 'var(--accent-ink)' }}>{WORDS[w]}.</span>
+          <span style={{ color: 'var(--accent-ink)' }}>{t.hero.words[w % t.hero.words.length]}.</span>
         </h1>
         <p
           className="kh-lead"
           style={{ fontSize: 19, lineHeight: 1.65, color: 'var(--muted)', maxWidth: '34em', margin: '20px auto 0', textWrap: 'pretty' }}
         >
-          Le hub de l'équipe Kurkkumopo : tous les projets construits pendant la Nuit de l'Info 2026, au même endroit.
+          {t.hero.lead}
         </p>
         <div className="kh-ctas" style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginTop: 28 }}>
-          <PrimaryBtn href="#projets">Voir les projets →</PrimaryBtn>
-          <SecondaryBtn href={GITHUB_ORG}>Voir sur GitHub</SecondaryBtn>
+          <PrimaryBtn href="#projets">{t.hero.ctaProjects}</PrimaryBtn>
+          <SecondaryBtn href={GITHUB_ORG}>{t.hero.ctaGithub}</SecondaryBtn>
         </div>
       </div>
       <div className="kh-scene" style={{ position: 'relative', height: 270, margin: '8px -32px 0', flex: 'none' }}>

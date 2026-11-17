@@ -2,13 +2,9 @@ import pixel from './assets/kurkkumopo-pixel.png'
 
 export const GITHUB_ORG = 'https://github.com/Kurkkumopo-NDI-2026'
 
-export const WORDS = ['des projets', 'du café', 'des merges', 'des commits']
-export const BUBBLES = ['git push', '+1 commit', 'merge ✓', 'vroum', 'café !']
-
 export interface Member {
   num: string
   name: string
-  role: string
   handle: string
   url: string
   avatar: string
@@ -25,15 +21,14 @@ const palettes = [
 ]
 
 export const TEAM: Member[] = [
-  ['Axel Frache', 'axelfrache', "Créateur de l'orga, git push --force en pleine confiance"],
-  ['Evan Paillard', 'Evan-Paillard', "High cortisol : traite n'importe quelle issue"],
-  ['Joris Vilardell', 'jorisvilardell', 'Transforme la caféine en commit'],
-  ['Damien Mathieu', 'damien-mathieu1', 'Alias Gabano, le tigre du merge'],
-].map(([name, h, role], i) => ({
+  ['Axel Frache', 'axelfrache'],
+  ['Evan Paillard', 'Evan-Paillard'],
+  ['Joris Vilardell', 'jorisvilardell'],
+  ['Damien Mathieu', 'damien-mathieu1'],
+].map(([name, h], i) => ({
   ...palettes[i],
   num: '0' + (i + 1),
   name,
-  role,
   handle: '@' + h,
   url: 'https://github.com/' + h,
   avatar: 'https://github.com/' + h + '.png?size=400',
@@ -51,6 +46,8 @@ export interface Project extends ProjectInput {
   num: string
   size: string
   render: 'auto' | 'pixelated'
+  /** carte « Bientôt » : titre et description viennent des traductions */
+  placeholder?: boolean
 }
 
 // Ajouter un projet (terminé) : { title, desc, stack, url, banner: importedImage }
@@ -60,20 +57,17 @@ export const PROJECTS: Project[] = ALL_PROJECTS.length
   ? ALL_PROJECTS.map((p, i) => ({ ...p, num: String(i + 1).padStart(2, '0'), size: 'cover', render: 'auto' }))
   : ['01', '02', '03'].map((num) => ({
       num,
-      title: 'Bientôt',
-      desc: 'Le prochain projet apparaîtra ici.',
+      title: '',
+      desc: '',
       stack: '—',
       url: '#projets',
       banner: pixel,
       size: 'auto 70%',
       render: 'pixelated',
+      placeholder: true,
     }))
 
 const n = String(ALL_PROJECTS.length).padStart(2, '0')
 
-export const STATS = [
-  { value: '04', label: 'membres' },
-  { value: '01', label: 'nuit' },
-  { value: n, label: 'projets' },
-  { value: '99', label: 'cafés (estimation)' },
-]
+// libellés dans les traductions (t.stats), dans le même ordre
+export const STATS = ['04', '01', n, '99']
