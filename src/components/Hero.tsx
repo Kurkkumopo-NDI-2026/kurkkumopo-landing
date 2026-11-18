@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from 'react'
+import { memo, useEffect, useRef, useState } from 'react'
 import { GITHUB_ORG } from '../data'
 import { useI18n } from '../i18n/context'
 import { Kart, PassingItems, Road } from './pixel'
@@ -24,6 +24,32 @@ const STARS = Array.from({ length: 22 }, (_, i) => {
     />
   )
 })
+
+const GAME_URL = '/crossy'
+const KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a']
+const goGame = () => {
+  window.location.href = GAME_URL
+}
+
+function useEasterEgg() {
+  useEffect(() => {
+    let i = 0
+    const onKey = (e: KeyboardEvent) => {
+      const k = e.key.length === 1 ? e.key.toLowerCase() : e.key
+      i = k === KONAMI[i] ? i + 1 : k === KONAMI[0] ? 1 : 0
+      if (i === KONAMI.length) goGame()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
+
+  const clicks = useRef<number[]>([])
+  return () => {
+    const now = Date.now()
+    clicks.current = clicks.current.filter((c) => now - c < 2500).concat(now)
+    if (clicks.current.length >= 5) goGame()
+  }
+}
 
 const Scene = memo(function Scene() {
   return (
@@ -83,10 +109,11 @@ function Bubble({ w }: { w: number }) {
 export function Hero() {
   const { t } = useI18n()
   const [w, setW] = useState(0)
+  const egg = useEasterEgg()
   useEffect(() => {
-    const id = setInterval(() => setW((s) => (s + 1) % t.hero.words.length), 2200)
+    const id = setInterval(() => setW((s) => s + 1), 2200)
     return () => clearInterval(id)
-  }, [t.hero.words.length])
+  }, [])
 
   return (
     <section
@@ -155,7 +182,7 @@ export function Hero() {
           <SecondaryBtn href={GITHUB_ORG}>{t.hero.ctaGithub}</SecondaryBtn>
         </div>
       </div>
-      <div className="kh-scene" style={{ position: 'relative', height: 270, margin: '8px -32px 0', flex: 'none' }}>
+      <div className="kh-scene" onClick={egg} style={{ position: 'relative', height: 270, margin: '8px -32px 0', flex: 'none' }}>
         <Scene />
         <Bubble w={w} />
       </div>

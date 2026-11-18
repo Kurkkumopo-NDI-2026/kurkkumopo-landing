@@ -1,0 +1,188 @@
+html.crossy-page,
+html.crossy-page body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #070c18;
+}
+.crossy {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  touch-action: none;
+  font-family: 'Silkscreen', monospace;
+  color: #ece8dc;
+  user-select: none;
+  -webkit-user-select: none;
+  background: #070c18;
+}
+.crossy canvas {
+  display: block;
+}
+.crossy a {
+  color: #f5b81c;
+}
+.crossy a:hover {
+  color: #ffca3d;
+}
+.crossy .cr-score {
+  position: fixed;
+  left: 24px;
+  top: 16px;
+  font-size: 64px;
+  line-height: 1;
+  text-shadow: 4px 4px 0 #070c18;
+  pointer-events: none;
+  transition: transform 0.12s;
+}
+.crossy .cr-score.bump {
+  transform: scale(1.15);
+}
+.crossy .cr-meta {
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-shadow: 2px 2px 0 #070c18;
+}
+.crossy .cr-meta span {
+  white-space: nowrap;
+}
+.crossy .cr-coffee {
+  color: #f5b81c;
+}
+.crossy .panel {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #070c18;
+  border: 2px solid #f5b81c;
+  box-shadow: 8px 8px 0 #f5b81c;
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: flex-start;
+  width: min(440px, calc(100vw - 48px));
+  box-sizing: border-box;
+}
+.crossy .cr-title {
+  bottom: 32px;
+}
+@media (min-width: 900px) {
+  .crossy .cr-title {
+    left: 32px;
+    transform: none;
+  }
+}
+.crossy .cr-over {
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.crossy .panel h1 {
+  margin: 0;
+  font-family: 'Silkscreen', monospace;
+  font-size: clamp(26px, 5vw, 38px);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  font-weight: 700;
+}
+.crossy .panel h1 em {
+  font-style: normal;
+  color: #f5b81c;
+}
+.crossy .panel p {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #c4cad6;
+}
+.crossy .kbd {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: #8a93a6;
+}
+.crossy .row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+.crossy .btn {
+  font-family: 'Silkscreen', monospace;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  padding: 12px 18px;
+  border: 2px solid #f5b81c;
+  background: #f5b81c;
+  color: #070c18;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    transform 0.12s,
+    background 0.12s;
+}
+.crossy .btn:hover {
+  background: #ffca3d;
+  color: #070c18;
+  transform: translateY(-2px);
+}
+.crossy .btn:active {
+  transform: translateY(1px);
+}
+.crossy .btn.ghost {
+  background: transparent;
+  color: #ece8dc;
+  border-color: #2b3a5c;
+}
+.crossy .btn.ghost:hover {
+  border-color: #f5b81c;
+  color: #ece8dc;
+}
+.crossy .btn:focus-visible {
+  outline: 2px solid #ece8dc;
+  outline-offset: 2px;
+}
+.crossy .stats {
+  display: flex;
+  gap: 28px;
+}
+.crossy .stats div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.crossy .stats b {
+  font-size: 32px;
+  line-height: 1;
+}
+.crossy .stats small {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: #8a93a6;
+}
+.crossy .hide {
+  display: none !important;
+}
+.crossy .cr-mute {
+  background: none;
+  border: 1px solid #2b3a5c;
+  color: #8a93a6;
+  font-family: inherit;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  padding: 6px 8px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.crossy .cr-mute:hover {
+  border-color: #f5b81c;
+  color: #ece8dc;
+}

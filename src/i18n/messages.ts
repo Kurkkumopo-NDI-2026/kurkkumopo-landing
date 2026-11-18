@@ -1,3 +1,5 @@
+import type { DeathKind } from '../crossy/game'
+
 export const LANGS = ['fr', 'en', 'fi'] as const
 export type Lang = (typeof LANGS)[number]
 
@@ -24,7 +26,7 @@ const fr = {
     lead: "Le hub de l'équipe Kurkkumopo : tous les projets construits pendant la Nuit de l'Info 2026, au même endroit.",
     ctaProjects: 'Voir les projets →',
     ctaGithub: 'Voir sur GitHub',
-    bubbles: ['git push', '+1 commit', 'merge ✓', 'vroum', 'café !'],
+    bubbles: ['git push', '+1 commit', 'merge ✓', 'vroum', 'café !', '↑↑↓↓←→←→BA'],
     kartAlt: "Kurkkumopo, mascotte de l'équipe",
   },
   road: ['CAFÉ', 'BUG #42', 'TRAVAUX', 'DEPLOY', 'CAFÉ x2'],
@@ -59,6 +61,28 @@ const fr = {
     event: "NUIT DE L'INFO",
     made: 'Fait avec du café · zzZ',
   },
+  game: {
+    kicker: "EASTER EGG · NUIT DE L'INFO 2026",
+    desc: 'Traverse la nuit sans finir sous un merge. Ramasse les cafés, évite les trains de déploiement, et ne reste pas immobile : la nuit avance.',
+    controls: '↑ ↓ ← → · ZQSD · SWIPE / TAP',
+    play: 'Rouler ↑',
+    hub: '← Hub',
+    again: 'Rejouer · Espace',
+    gameOver: 'GAME OVER',
+    score: 'SCORE',
+    record: 'RECORD',
+    coffee: 'CAFÉ',
+    coffees: 'CAFÉS',
+    sound: 'SON',
+    msgs: {
+      car: ['ÉCRASÉ', 'Percuté par un merge sauvage.'],
+      truck: ['ÉCRASÉ', 'Le camion de la prod ne freine pas.'],
+      train: ['DÉRAILLÉ', "Le train du déploiement ne s'arrête jamais."],
+      water: ['PLOUF', 'Le Kurkkumopo ne flotte pas.'],
+      current: ['EMPORTÉ', "Le courant t'a sorti de la carte."],
+      caught: ['RATTRAPÉ', "Trop lent : la nuit t'a rattrapé."],
+    } as Record<DeathKind, [string, string]>,
+  },
 }
 
 export type Messages = typeof fr
@@ -84,7 +108,7 @@ const en: Messages = {
     lead: "Team Kurkkumopo's hub: every project built during Nuit de l'Info 2026, in one place.",
     ctaProjects: 'See the projects →',
     ctaGithub: 'View on GitHub',
-    bubbles: ['git push', '+1 commit', 'merge ✓', 'vroom', 'coffee!'],
+    bubbles: ['git push', '+1 commit', 'merge ✓', 'vroom', 'coffee!', '↑↑↓↓←→←→BA'],
     kartAlt: 'Kurkkumopo, the team mascot',
   },
   road: ['COFFEE', 'BUG #42', 'ROADWORK', 'DEPLOY', 'COFFEE x2'],
@@ -119,6 +143,28 @@ const en: Messages = {
     event: "NUIT DE L'INFO",
     made: 'Made with coffee · zzZ',
   },
+  game: {
+    kicker: "EASTER EGG · NUIT DE L'INFO 2026",
+    desc: "Cross the night without ending up under a merge. Grab the coffees, dodge the deployment trains, and don't stand still: the night is coming.",
+    controls: '↑ ↓ ← → · WASD · SWIPE / TAP',
+    play: 'Ride ↑',
+    hub: '← Hub',
+    again: 'Play again · Space',
+    gameOver: 'GAME OVER',
+    score: 'SCORE',
+    record: 'BEST',
+    coffee: 'COFFEE',
+    coffees: 'COFFEES',
+    sound: 'SOUND',
+    msgs: {
+      car: ['CRUSHED', 'Hit by a wild merge.'],
+      truck: ['CRUSHED', "The prod truck doesn't brake."],
+      train: ['DERAILED', 'The deployment train never stops.'],
+      water: ['SPLASH', "The Kurkkumopo doesn't float."],
+      current: ['SWEPT AWAY', 'The current carried you off the map.'],
+      caught: ['CAUGHT', 'Too slow: the night caught up with you.'],
+    } as Record<DeathKind, [string, string]>,
+  },
 }
 
 const fi: Messages = {
@@ -142,7 +188,7 @@ const fi: Messages = {
     lead: "Kurkkumopo-tiimin keskus: kaikki Nuit de l'Info 2026 -tapahtumassa rakennetut projektit yhdessä paikassa.",
     ctaProjects: 'Katso projektit →',
     ctaGithub: 'Katso GitHubissa',
-    bubbles: ['git push', '+1 commit', 'merge ✓', 'brum brum', 'kahvia!'],
+    bubbles: ['git push', '+1 commit', 'merge ✓', 'brum brum', 'kahvia!', '↑↑↓↓←→←→BA'],
     kartAlt: 'Kurkkumopo, tiimin maskotti',
   },
   road: ['KAHVI', 'BUGI #42', 'TIETYÖ', 'DEPLOY', 'KAHVI x2'],
@@ -176,6 +222,28 @@ const fi: Messages = {
     tagline: "Kurkkumopo-tiimin keskus, Nuit de l'Info 2026.",
     event: "NUIT DE L'INFO",
     made: 'Tehty kahvilla · zzZ',
+  },
+  game: {
+    kicker: "EASTER EGG · NUIT DE L'INFO 2026",
+    desc: 'Ylitä yö jäämättä mergen alle. Kerää kahvit, väistä deployment-junat äläkä jää paikoillesi: yö etenee.',
+    controls: '↑ ↓ ← → · WASD · PYYHKÄISE / NAPAUTA',
+    play: 'Aja ↑',
+    hub: '← Hub',
+    again: 'Pelaa uudelleen · Välilyönti',
+    gameOver: 'PELI OHI',
+    score: 'PISTEET',
+    record: 'ENNÄTYS',
+    coffee: 'KAHVI',
+    coffees: 'KAHVIT',
+    sound: 'ÄÄNI',
+    msgs: {
+      car: ['LITISTETTY', 'Villi merge törmäsi sinuun.'],
+      truck: ['LITISTETTY', 'Tuotannon rekka ei jarruta.'],
+      train: ['SUISTUI RAITEILTA', 'Deployment-juna ei pysähdy koskaan.'],
+      water: ['PLUMPS', 'Kurkkumopo ei kellu.'],
+      current: ['VIRRAN VIEMÄ', 'Virta vei sinut kartalta.'],
+      caught: ['SAAVUTETTU', 'Liian hidas: yö saavutti sinut.'],
+    } as Record<DeathKind, [string, string]>,
   },
 }
 
