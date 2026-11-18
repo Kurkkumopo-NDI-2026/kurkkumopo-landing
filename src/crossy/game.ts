@@ -755,6 +755,19 @@ export function startCrossy(els: GameEls, T: GameTexts, hubUrl: string): () => v
         const base = ((((i * 3.7 + r * 1.3 + t * L.dir * sp) % 40) + 40) % 40) - 20 + camC
         flat(base, r - 0.12 + ((i * 7) % 5) * 0.06, base + 0.7, r - 0.07 + ((i * 7) % 5) * 0.06, -0.279, '#1b4f8f')
       }
+      if (L.lily) {
+        for (let c = cMin; c <= cMax; c++)
+          if (L.pads[c]) {
+            drawBox(c - 0.36, -0.27, r - 0.36, c + 0.36, -0.21, r + 0.36, '#3fae5a')
+            drawBox(c - 0.08, -0.21, r - 0.08, c + 0.04, -0.17, r + 0.04, '#f5b81c')
+          }
+      } else
+        for (const o of [...L.objs].sort((a, b) => a.x - b.x)) {
+          if (o.x + o.len < cMin || o.x > cMax) continue
+          drawBox(o.x, -0.32, r - 0.3, o.x + o.len - 0.08, 0.02, r + 0.3, '#7a4e26')
+          drawBox(o.x + o.len - 0.08, -0.32, r - 0.3, o.x + o.len, 0.02, r + 0.3, '#b5824a')
+          drawBox(o.x + 0.3, 0.02, r - 0.12, o.x + 0.6, 0.04, r + 0.0, '#6a4220')
+        }
     } else {
       drawBox(cMin - 2, -1.5, z0, cMax + 2, 0, z1, '#262a36')
       for (let c = cMin; c <= cMax; c++) flat(c - 0.14, r - 0.38, c + 0.14, r + 0.38, 0.002, '#4a3a2c')
@@ -843,19 +856,7 @@ export function startCrossy(els: GameEls, T: GameTexts, hubUrl: string): () => v
         G.push([fx + d * 0.2, 0.3, r, 1.1, 'rgba(245,184,28,.28)'])
       }
     } else if (L.type === 'river') {
-      if (L.lily) {
-        for (let c = cMin; c <= cMax; c++)
-          if (L.pads[c]) {
-            add(r, c - 0.36, -0.27, r - 0.36, c + 0.36, -0.21, r + 0.36, '#3fae5a')
-            add(r, c - 0.08, -0.21, r - 0.08, c + 0.04, -0.17, r + 0.04, '#f5b81c')
-          }
-      } else
-        for (const o of L.objs) {
-          if (o.x + o.len < cMin || o.x > cMax) continue
-          add(r, o.x, -0.32, r - 0.3, o.x + o.len - 0.08, 0.02, r + 0.3, '#7a4e26')
-          add(r, o.x + o.len - 0.08, -0.32, r - 0.3, o.x + o.len, 0.02, r + 0.3, '#b5824a')
-          add(r, o.x + 0.3, 0.02, r - 0.12, o.x + 0.6, 0.04, r + 0.0, '#6a4220')
-        }
+      return
     } else {
       const on = L.warn && Math.sin(t * 14) > 0
       add(r, 4.92, 0, r + 0.3, 5.04, 1.3, r + 0.42, '#3a4258')
