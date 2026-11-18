@@ -1,5 +1,8 @@
 import type { CSSProperties } from 'react'
+import pixel from '../assets/kurkkumopo-pixel.png'
+import rouge from '../assets/kurkkumopo-pixel-rouge.png'
 import vert2 from '../assets/kurkkumopo-pixel-vert2.png'
+import orange from '../assets/kurkkumopo-pixel-orange.png'
 import { GITHUB_ORG, PROJECTS, STATS, TEAM } from '../data'
 import { useI18n } from '../i18n/context'
 import { Kart, Road, Track } from './pixel'
@@ -174,16 +177,18 @@ export function Team() {
   )
 }
 
+// un kart par membre, dans l'ordre de TEAM (jaune, rouge, vert, orange)
+const PEEK_KARTS = [pixel, rouge, vert2, orange]
+
 function Peek() {
   return (
     <div className="kk" style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 200, overflow: 'hidden' }}>
       <Road animated={false} />
-      <Track bottom={10} zIndex={2} animation="kk-cross 12s linear infinite">
-        <Kart width={144} puffs />
-      </Track>
-      <Track bottom={10} zIndex={2} animation="kk-cross 12s -3s linear infinite">
-        <Kart width={144} puffs src={vert2} />
-      </Track>
+      {PEEK_KARTS.map((src, i) => (
+        <Track key={i} bottom={10} zIndex={2} animation={`kk-cross 12s ${-i * 3}s linear infinite`}>
+          <Kart width={144} puffs src={src} />
+        </Track>
+      ))}
     </div>
   )
 }
