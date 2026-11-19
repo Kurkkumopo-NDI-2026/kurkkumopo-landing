@@ -138,6 +138,11 @@ export function startCrossy(els: GameEls, T: GameTexts, hubUrl: string): () => v
       f = (k: number) => 'rgb(' + ((r * k) | 0) + ',' + ((g * k) | 0) + ',' + ((b * k) | 0) + ')'
     return (SH[h] = [h, f(0.74), f(0.56)])
   }
+  const mix = (c: string, a: number) => {
+    const m = c.match(/\d+/g)
+    const [r, g, b] = c[0] === '#' ? [1, 3, 5].map((i) => parseInt(c.slice(i, i + 2), 16)) : m!.map(Number)
+    return 'rgb(' + (((r * (1 - a) + 7 * a) | 0) + ',' + ((g * (1 - a) + 12 * a) | 0) + ',' + ((b * (1 - a) + 24 * a) | 0)) + ')'
+  }
   let camC = 0,
     camR = 0,
     ox = 0,
@@ -154,8 +159,8 @@ export function startCrossy(els: GameEls, T: GameTexts, hubUrl: string): () => v
     ctx.closePath()
     ctx.fill()
   }
-  function drawBox(x0: number, y0: number, z0: number, x1: number, y1: number, z1: number, col: string) {
-    const s = sh(col)
+  function drawBox(x0: number, y0: number, z0: number, x1: number, y1: number, z1: number, col: string, dim = 0) {
+    const s = dim ? sh(col).map((c) => mix(c, dim)) : sh(col)
     quad(
       px(x0, y0, z0),
       py(x0, y0, z0),
@@ -193,12 +198,13 @@ export function startCrossy(els: GameEls, T: GameTexts, hubUrl: string): () => v
   function flat(x0: number, z0: number, x1: number, z1: number, y: number, col: string) {
     quad(px(x0, y, z0), py(x0, y, z0), px(x1, y, z0), py(x1, y, z0), px(x1, y, z1), py(x1, y, z1), px(x0, y, z1), py(x0, y, z1), col)
   }
-  let Q: { lane: number; k: number; b: Box }[] = []
+  let Q: { lane: number; k: number; i: number; b: Box }[] = []
   let G: [number, number, number, number, string][] = []
   function add(lane: number, x0: number, y0: number, z0: number, x1: number, y1: number, z1: number, col: string) {
-    Q.push({ lane, k: -0.36 * (x0 + x1) - 1.035 * (y0 + y1) + (z0 + z1), b: [x0, y0, z0, x1, y1, z1, col] })
+    Q.push({ lane, k: -0.36 * (x0 + x1) - 1.035 * (y0 + y1) + (z0 + z1), i: Q.length, b: [x0, y0, z0, x1, y1, z1, col] })
   }
   const rot = (x: number, z: number, f: number): [number, number] => (f === 0 ? [x, z] : f === 1 ? [z, -x] : f === 2 ? [-x, -z] : [-z, x])
+  const byDepth = (a: (typeof Q)[number], b: (typeof Q)[number]) => b.lane - a.lane || (Math.abs(b.k - a.k) > 1e-6 ? b.k - a.k : a.i - b.i)
   function addModel(lane: number, M: Box[], cx: number, cy: number, cz: number, f: number, sxz: number, sy: number) {
     for (const m of M) {
       const a = rot(m[0], m[2], f),
@@ -216,35 +222,68 @@ export function startCrossy(els: GameEls, T: GameTexts, hubUrl: string): () => v
     }
   }
 
-  const N1 = '#2f62b4',
-    N2 = '#3a72c8',
-    ND = '#152b4d'
+  const N1 = '#1d3a78',
+    N2 = '#2a4c93',
+    NOSE = '#2f5aa6',
+    NOSE2 = '#3a68b8',
+    DISC = '#d99a12',
+    HUB = '#c9ced8'
   const KM: Box[] = []
   {
-    const k = (x0: number, y0: number, z0: number, x1: number, y1: number, z1: number, c: string, m = 1) => {
-      KM.push([x0, y0, z0, x1, y1, z1, c])
-      if (m) KM.push([-x1, y0, z0, -x0, y1, z1, c])
+    const SC = 0.86,
+      cy = 0.42
+    const b = (x0: number, y0: number, z0: number, x1: number, y1: number, z1: number, c: string, m = 1) => {
+      KM.push([x0 * SC, y0 * SC, z0 * SC, x1 * SC, y1 * SC, z1 * SC, c])
+      if (m) KM.push([-x1 * SC, y0 * SC, z0 * SC, -x0 * SC, y1 * SC, z1 * SC, c])
     }
-    for (const [z0, z1] of [
-      [-0.38, -0.16],
-      [0.14, 0.36],
-    ]) {
-      k(0.24, 0, z0, 0.42, 0.2, z1, C.y)
-      k(0.42, 0.06, z0 + 0.07, 0.43, 0.14, z1 - 0.07, ND)
+    const ring = (z0: number, z1: number, r: number) => {
+      b(-r * 0.52, cy - r, z0, r * 0.52, cy + r, z1, N1, 0)
+      b(-r * 0.82, cy - r * 0.93, z0, r * 0.82, cy + r * 0.93, z1, N1, 0)
+      b(-r, cy - r * 0.67, z0, r, cy + r * 0.67, z1, N1, 0)
     }
-    k(-0.32, 0.12, -0.34, 0.32, 0.6, 0.34, N1, 0)
-    k(-0.28, 0.6, -0.3, 0.28, 0.62, 0.3, N2, 0)
-    k(0.04, 0.34, 0.26, 0.34, 0.68, 0.46, C.w)
-    k(0.34, 0.42, 0.3, 0.35, 0.62, 0.42, C.dk)
-    k(0.12, 0.42, 0.46, 0.28, 0.62, 0.47, C.dk)
-    k(0.1, 0.68, 0.32, 0.3, 0.69, 0.44, C.dk)
-    k(0.32, 0.2, -0.26, 0.33, 0.46, -0.18, C.y, 1)
-    k(0.32, 0.2, -0.18, 0.33, 0.27, 0, C.y, 1)
-    k(0.22, 0.6, -0.06, 0.3, 0.86, 0.04, C.y)
-    k(0.2, 0.86, -0.08, 0.32, 0.94, 0.06, C.y)
-    k(-0.22, 0.74, -0.04, 0.22, 0.8, 0.02, C.r, 0)
-    k(-0.2, 0.6, -0.28, -0.14, 0.88, -0.22, ND, 0)
-    k(-0.23, 0.86, -0.31, -0.11, 0.96, -0.19, C.y, 0)
+    ring(-0.5, -0.46, 0.14)
+    ring(-0.46, -0.4, 0.22)
+    ring(-0.4, 0.34, 0.27)
+    ring(0.34, 0.42, 0.24)
+    ring(0.42, 0.46, 0.17)
+    b(-0.1, cy + 0.27, -0.36, 0.1, cy + 0.275, 0.3, N2, 0)
+
+    b(-0.08, 0.3, 0.44, 0.08, 0.42, 0.5, NOSE, 0)
+    b(-0.1, 0.29, 0.47, 0.1, 0.43, 0.63, NOSE, 0)
+    b(-0.07, 0.26, 0.49, 0.07, 0.46, 0.61, NOSE, 0)
+    b(-0.07, 0.29, 0.63, 0.07, 0.43, 0.65, NOSE2, 0)
+    b(-0.04, 0.46, 0.52, 0.04, 0.465, 0.58, C.w, 0)
+    b(-0.035, 0.34, 0.65, -0.005, 0.37, 0.651, C.dk, 0)
+
+    b(0.27, 0.44, 0.14, 0.28, 0.58, 0.28, C.w)
+    b(0.28, 0.47, 0.18, 0.285, 0.55, 0.25, C.dk)
+    b(0.27, 0.32, 0.14, 0.275, 0.345, 0.3, C.w)
+    b(0.24, 0.345, 0.33, 0.245, 0.37, 0.38, C.w)
+
+    b(0.27, 0.36, -0.27, 0.275, 0.52, -0.21, C.y)
+    b(0.27, 0.5, -0.24, 0.275, 0.55, -0.15, C.y)
+    b(0.27, 0.52, -0.15, 0.275, 0.56, -0.09, C.y)
+    b(0.27, 0.33, -0.24, 0.275, 0.38, -0.15, C.y)
+    b(0.27, 0.32, -0.15, 0.275, 0.36, -0.09, C.y)
+
+    b(0.03, 0.65, 0.36, 0.07, 0.69, 0.4, C.y)
+    b(0.04, 0.69, 0.37, 0.06, 0.76, 0.39, C.y)
+    b(0.06, 0.75, 0.38, 0.08, 0.82, 0.41, C.y)
+    b(0.08, 0.81, 0.4, 0.1, 0.86, 0.43, C.y)
+    b(0.08, 0.85, 0.4, 0.13, 0.9, 0.45, C.y)
+
+    b(-0.1, 0.66, 0.06, 0.1, 0.73, 0.2, N1, 0)
+    b(-0.065, 0.73, 0.09, 0.065, 0.83, 0.17, N1, 0)
+    b(-0.44, 0.85, 0.1, 0.44, 0.91, 0.16, C.y, 0)
+    b(-0.09, 0.82, 0.07, 0.09, 0.93, 0.19, N1, 0)
+
+    for (const zc of [-0.28, 0.27]) {
+      b(0.23, 0.07, zc - 0.17, 0.31, 0.27, zc + 0.17, C.y)
+      b(0.23, 0.02, zc - 0.12, 0.31, 0.32, zc + 0.12, C.y)
+      b(0.23, 0, zc - 0.07, 0.31, 0.34, zc + 0.07, C.y)
+      b(0.31, 0.08, zc - 0.1, 0.312, 0.26, zc + 0.1, DISC)
+      b(0.312, 0.14, zc - 0.035, 0.317, 0.2, zc + 0.035, HUB)
+    }
   }
 
   const rnd = (a: number, b: number) => a + Math.random() * (b - a),
@@ -649,6 +688,30 @@ export function startCrossy(els: GameEls, T: GameTexts, hubUrl: string): () => v
       const L = lanes.get(r)
       if (L) ground(L, cMin, cMax)
     }
+    playerShadow()
+    ctx.fillStyle = 'rgba(7,12,24,.5)'
+    for (const [a, b] of [
+      [-40, -4.5],
+      [4.5, 40],
+    ]) {
+      ctx.beginPath()
+      ctx.moveTo(px(a, 0, rBot - 4), py(a, 0, rBot - 4))
+      ctx.lineTo(px(b, 0, rBot - 4), py(b, 0, rBot - 4))
+      ctx.lineTo(px(b, 0, rTop + 4), py(b, 0, rTop + 4))
+      ctx.lineTo(px(a, 0, rTop + 4), py(a, 0, rTop + 4))
+      ctx.fill()
+    }
+    if (state === 'play') {
+      ctx.fillStyle = 'rgba(7,12,24,.78)'
+      ctx.beginPath()
+      ctx.moveTo(px(-40, 0, creep - 30), py(-40, 0, creep - 30))
+      ctx.lineTo(px(40, 0, creep - 30), py(40, 0, creep - 30))
+      ctx.lineTo(px(40, 0, creep), py(40, 0, creep))
+      ctx.lineTo(px(-40, 0, creep), py(-40, 0, creep))
+      ctx.fill()
+      const a = 0.45 + Math.sin(t * 6) * 0.25
+      flat(-40, creep - 0.06, 40, creep + 0.06, 0, 'rgba(226,59,46,' + a.toFixed(2) + ')')
+    }
     Q = []
     G = []
     for (let r = rTop; r >= rBot; r--) {
@@ -673,31 +736,7 @@ export function startCrossy(els: GameEls, T: GameTexts, hubUrl: string): () => v
       }
     }
     for (const p of parts) add(Math.round(p.z), p.x - p.s, p.y, p.z - p.s, p.x + p.s, p.y + p.s * 2, p.z + p.s, p.col)
-    Q.sort((a, b) => b.lane - a.lane || b.k - a.k)
-    for (const q of Q) drawBox(...q.b)
-    ctx.fillStyle = 'rgba(7,12,24,.5)'
-    for (const [a, b] of [
-      [-40, -4.5],
-      [4.5, 40],
-    ]) {
-      ctx.beginPath()
-      ctx.moveTo(px(a, 0, rBot - 4), py(a, 0, rBot - 4))
-      ctx.lineTo(px(b, 0, rBot - 4), py(b, 0, rBot - 4))
-      ctx.lineTo(px(b, 0, rTop + 4), py(b, 0, rTop + 4))
-      ctx.lineTo(px(a, 0, rTop + 4), py(a, 0, rTop + 4))
-      ctx.fill()
-    }
-    if (state === 'play') {
-      ctx.fillStyle = 'rgba(7,12,24,.78)'
-      ctx.beginPath()
-      ctx.moveTo(px(-40, 0, creep - 30), py(-40, 0, creep - 30))
-      ctx.lineTo(px(40, 0, creep - 30), py(40, 0, creep - 30))
-      ctx.lineTo(px(40, 0, creep), py(40, 0, creep))
-      ctx.lineTo(px(-40, 0, creep), py(-40, 0, creep))
-      ctx.fill()
-      const a = 0.45 + Math.sin(t * 6) * 0.25
-      flat(-40, creep - 0.06, 40, creep + 0.06, 0, 'rgba(226,59,46,' + a.toFixed(2) + ')')
-    }
+    Q.sort(byDepth)
     ctx.globalCompositeOperation = 'lighter'
     for (const g of G) {
       const x = px(g[0], g[1], g[2]),
@@ -710,11 +749,57 @@ export function startCrossy(els: GameEls, T: GameTexts, hubUrl: string): () => v
       ctx.fillRect(x - rr, y - rr, rr * 2, rr * 2)
     }
     ctx.globalCompositeOperation = 'source-over'
+    for (const q of Q) drawFogged(q.b)
     const v = ctx.createRadialGradient(W / 2, H * 0.5, Math.min(W, H) * 0.35, W / 2, H * 0.5, Math.max(W, H) * 0.75)
     v.addColorStop(0, 'rgba(7,12,24,0)')
     v.addColorStop(1, 'rgba(7,12,24,.7)')
     ctx.fillStyle = v
     ctx.fillRect(0, 0, W, H)
+  }
+  function drawFogged(b: Box) {
+    const [ax, y0, az, bx, y1, bz, col] = b
+    const x0 = Math.min(ax, bx),
+      x1 = Math.max(ax, bx),
+      z0 = Math.min(az, bz),
+      z1 = Math.max(az, bz)
+    const xs = [x0, ...[-4.5, 4.5].filter((v) => v > x0 && v < x1), x1]
+    const zs = state === 'play' && creep > z0 && creep < z1 ? [z1, creep, z0] : [z1, z0]
+    for (let j = 0; j < zs.length - 1; j++) {
+      const za = zs[j + 1],
+        zb = zs[j],
+        night = state === 'play' && (za + zb) / 2 < creep
+      for (let i = 0; i < xs.length - 1; i++) {
+        const xa = xs[i],
+          xb = xs[i + 1],
+          side = Math.abs((xa + xb) / 2) > 4.5
+        const dim = night ? 1 - (side ? 0.5 : 1) * 0.22 : side ? 0.5 : 0
+        drawBox(xa, y0, za, xb, y1, zb, col, dim)
+      }
+    }
+  }
+  function playerShadow() {
+    if (state === 'over' && !P.dead) return
+    if (!P.alive && P.dead !== 'car' && P.dead !== 'truck') return
+    const L = lanes.get(Math.round(P.r))
+    if (!L || L.type === 'river' || P.ride) return
+    const pts = (
+      [
+        [-0.25, -0.44],
+        [0.25, -0.44],
+        [0.25, 0.52],
+        [-0.25, 0.52],
+      ] as [number, number][]
+    ).map(([x, z]) => {
+      const [a, b] = rot(x, z, P.f)
+      return [P.c + a, P.r + b]
+    })
+    ctx.globalAlpha = 0.3 * (1 - P.dy)
+    ctx.fillStyle = '#000000'
+    ctx.beginPath()
+    pts.forEach(([c, r], i) => (i ? ctx.lineTo(px(c, 0.003, r), py(c, 0.003, r)) : ctx.moveTo(px(c, 0.003, r), py(c, 0.003, r))))
+    ctx.closePath()
+    ctx.fill()
+    ctx.globalAlpha = 1
   }
   function ground(L: Lane, cMin: number, cMax: number) {
     const r = L.r,
@@ -729,11 +814,6 @@ export function startCrossy(els: GameEls, T: GameTexts, hubUrl: string): () => v
           flat(c - 0.4, r - 0.4, c + 0.4, r + 0.4, 0.002, C.y)
           ctx.globalAlpha = 1
         }
-      if (Math.round(P.r) === r && P.alive && !P.ride) {
-        ctx.globalAlpha = 0.3
-        flat(P.c - 0.32, P.r - 0.34, P.c + 0.32, P.r + 0.34, 0.003, '#000000')
-        ctx.globalAlpha = 1
-      }
     } else if (L.type === 'road') {
       drawBox(cMin - 2, -1.5, z0, cMax + 2, 0, z1, '#1a2030')
       const nx = lanes.get(r + 1)
