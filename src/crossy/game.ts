@@ -209,7 +209,9 @@ export function startCrossy(els: GameEls, T: GameTexts, hubUrl: string): () => v
     for (const m of M) {
       const a = rot(m[0], m[2], f),
         b = rot(m[3], m[5], f)
-      const side = m[6] === N1 ? 0 : (a[1] + b[1]) / 2 - 0.36 * ((a[0] + b[0]) / 2)
+      const rx = (a[0] + b[0]) / 2,
+        rz = (a[1] + b[1]) / 2
+      const kb = m[6] === N1 ? 0 : rx > 0.15 || rz < -0.15 ? 0.5 : rx < -0.15 || rz > 0.15 ? -0.5 : 0
       add(
         lane,
         cx + Math.min(a[0], b[0]) * sxz,
@@ -219,7 +221,7 @@ export function startCrossy(els: GameEls, T: GameTexts, hubUrl: string): () => v
         cy + m[4] * sy,
         cz + Math.max(a[1], b[1]) * sxz,
         m[6],
-        side < -0.1 ? 0.5 : side > 0.1 ? -0.5 : 0,
+        kb,
       )
     }
   }
@@ -733,8 +735,11 @@ export function startCrossy(els: GameEls, T: GameTexts, hubUrl: string): () => v
           sxz = 1.35
         }
         if (P.dead === 'water' || P.dead === 'current') base -= P.sink * 1.1
-        if ((P.dead !== 'water' && P.dead !== 'current') || P.sink < 1)
+        if ((P.dead !== 'water' && P.dead !== 'current') || P.sink < 1) {
+          const from = Q.length
           addModel(lane, KM, P.c, base + P.dy, P.r, P.f, sxz * 1.05, sy * 1.05)
+          if (L && L.type === 'river') clipInRiver(from, Math.round(P.r) - 0.5)
+        }
       }
     }
     for (const p of parts) add(Math.round(p.z), p.x - p.s, p.y, p.z - p.s, p.x + p.s, p.y + p.s * 2, p.z + p.s, p.col)
@@ -757,6 +762,21 @@ export function startCrossy(els: GameEls, T: GameTexts, hubUrl: string): () => v
     v.addColorStop(1, 'rgba(7,12,24,.7)')
     ctx.fillStyle = v
     ctx.fillRect(0, 0, W, H)
+  }
+  function clipInRiver(from: number, bank: number) {
+    const water = -0.28
+    const out: typeof Q = []
+    for (const q of Q.slice(from)) {
+      const b = q.b.slice() as Box
+      if (b[4] <= water) continue
+      b[1] = Math.max(b[1], water)
+      if (b[1] < 0 && b[2] < bank) {
+        if (b[5] > bank) out.push({ ...q, b: [b[0], b[1], bank, b[3], b[4], b[5], b[6]] })
+        if (b[4] > 0) out.push({ ...q, i: q.i + 0.5, b: [b[0], 0, b[2], b[3], b[4], Math.min(b[5], bank), b[6]] })
+      } else out.push({ ...q, b })
+    }
+    Q.length = from
+    Q.push(...out)
   }
   function drawFogged(b: Box) {
     const [ax, y0, az, bx, y1, bz, col] = b
