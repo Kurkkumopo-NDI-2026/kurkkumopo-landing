@@ -200,8 +200,8 @@ export function startCrossy(els: GameEls, T: GameTexts, hubUrl: string): () => v
   }
   let Q: { lane: number; k: number; i: number; b: Box }[] = []
   let G: [number, number, number, number, string][] = []
-  function add(lane: number, x0: number, y0: number, z0: number, x1: number, y1: number, z1: number, col: string) {
-    Q.push({ lane, k: -0.36 * (x0 + x1) - 1.035 * (y0 + y1) + (z0 + z1), i: Q.length, b: [x0, y0, z0, x1, y1, z1, col] })
+  function add(lane: number, x0: number, y0: number, z0: number, x1: number, y1: number, z1: number, col: string, kb = 0) {
+    Q.push({ lane, k: -0.36 * (x0 + x1) - 1.035 * (y0 + y1) + (z0 + z1) - kb, i: Q.length, b: [x0, y0, z0, x1, y1, z1, col] })
   }
   const rot = (x: number, z: number, f: number): [number, number] => (f === 0 ? [x, z] : f === 1 ? [z, -x] : f === 2 ? [-x, -z] : [-z, x])
   const byDepth = (a: (typeof Q)[number], b: (typeof Q)[number]) => b.lane - a.lane || (Math.abs(b.k - a.k) > 1e-6 ? b.k - a.k : a.i - b.i)
@@ -209,6 +209,7 @@ export function startCrossy(els: GameEls, T: GameTexts, hubUrl: string): () => v
     for (const m of M) {
       const a = rot(m[0], m[2], f),
         b = rot(m[3], m[5], f)
+      const side = m[6] === N1 ? 0 : (a[1] + b[1]) / 2 - 0.36 * ((a[0] + b[0]) / 2)
       add(
         lane,
         cx + Math.min(a[0], b[0]) * sxz,
@@ -218,6 +219,7 @@ export function startCrossy(els: GameEls, T: GameTexts, hubUrl: string): () => v
         cy + m[4] * sy,
         cz + Math.max(a[1], b[1]) * sxz,
         m[6],
+        side < -0.1 ? 0.5 : side > 0.1 ? -0.5 : 0,
       )
     }
   }
@@ -907,8 +909,8 @@ export function startCrossy(els: GameEls, T: GameTexts, hubUrl: string): () => v
           z1 = r + 0.3,
           d = L.dir,
           col = o.col!
-        add(r, x0 + 0.15, 0, z0 - 0.03, x0 + 0.45, 0.2, z0 + 0.1, '#0a0f1c')
-        add(r, x1 - 0.45, 0, z0 - 0.03, x1 - 0.15, 0.2, z0 + 0.1, '#0a0f1c')
+        add(r, x0 + 0.15, 0, z0 - 0.03, x0 + 0.45, 0.2, z0 + 0.1, '#0a0f1c', 1)
+        add(r, x1 - 0.45, 0, z0 - 0.03, x1 - 0.15, 0.2, z0 + 0.1, '#0a0f1c', 1)
         add(r, x0 + 0.15, 0, z1 - 0.1, x0 + 0.45, 0.2, z1 + 0.03, '#0a0f1c')
         add(r, x1 - 0.45, 0, z1 - 0.1, x1 - 0.15, 0.2, z1 + 0.03, '#0a0f1c')
         if (o.kind === 'car') {
